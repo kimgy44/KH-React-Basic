@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>market</title>
+  </head>
+  <body>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <div id="root"></div>
+
+    <style>
+      span {
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
+      button {
+        margin : 10px;
+      }
+
+      .list {
+        border-bottom: 1px solid palegoldenrod
+      }
+
+      .modal {
+        margin: 10px;
+        padding: 10px;
+        background: #eee;
+      }
+    </style>
+    
+    <script type="text/babel">
+      const root = document.getElementById("root");
+      const App = () => {
+
+        let [like, setLike] = React.useState([0,0,0]);
+        let [dislike, setDislike] = React.useState([0,0,0]);
+        let [modal, setModal] = React.useState(false);
+        let [userInput, setUserinput] = React.useState("");
+        const [index, setIndex] = React.useState(0);
+
+        const [books, setBooks] = React.useState([
+          "자바의 정석",
+          "리액트의 정석",
+          "오라클의 정석"
+        ]);
+
+        const [publishs, setPublishs] = React.useState([
+          "5월 11일 출판",
+          "6월 12일 출판",
+          "7월 13일 출판"
+        ]);
+        
+        const add = () => {
+          let copy = [...like];
+          copy[i] += 1;
+          setLike(copy);
+          setLike(like + 1)
+        };
+
+        const minus = () => {
+          setDislike(dislike + 1 )
+        }
+        // 수정하기 - 배열.. 얕은 복사
+        // 리액트의 정석 -> 스프링의 정석
+        // function bookUpdate() {
+        //   let book_copy = [...books];
+        //   book_copy[1] = "스프링의 정석";
+        //   setBooks(book_copy);
+        // }
+        const bookUpdate = () => {
+          let book_copy = [...books];
+          book_copy[1] = "스프링의 정석";
+          setBooks(book_copy);
+        }
+
+        // 정렬하기
+        function bookSort() {
+          let book_copy = [...books];
+          book_copy.sort();
+          setBooks(book_copy);
+        }
+
+
+        const Modal = (props) => {
+          console.log(props);
+          console.log(props.title);
+          console.log(props.title);
+          return (
+            <div className="modal">
+              <h3>제목 : {props.title}</h3>
+              <h4>index : {props.index}</h4>
+              <p>도서소개</p>
+            </div>
+          );
+        }
+
+        const openModal = (e) => {
+          console.log(e.target);
+          setModal(!modal)
+        }
+
+        return (
+          <>
+            <div className="App">
+              {/****************************************************** 
+                브라우저는 같은 이름으로 자동으로 배열 전환 처리됨.. 
+                도서목록 시작
+              */}
+              {books.map((book, i) => (
+                <div className="list" key={i}>
+                  <h3 onClick={()=>{
+                    setModal(!modal);
+                    setIndex(i);
+                  }}>
+                    {book}
+                    <span onClick={(e) => {
+                      e.stopPropagation();
+                      let copy_like = [...like];
+                      copy_like[i] = copy_like[i]+1;
+                      setLike(copy_like);
+                    }}>
+                      👍
+                    </span>
+                    { like[i] }
+                    <span onClick={(e) => {
+                      e.stopPropagation();
+                      let copy_like = [...dislike];
+                      copy_like[i] = copy_like[i]+1;
+                      setDislike(copy_like);
+                    }}>
+                      👎
+                    </span>
+                    { dislike[i] }
+                  </h3>
+                  <p>{publishs[i]}</p>
+
+                  <button onClick={() => {
+                    let copy = [...books];
+                    copy[i] = "스프링의 정석";
+                    setBooks(copy);
+                  }}>
+                    수정
+                  </button>
+
+                  <button onClick={(e) => {
+                    let copy = [...books];
+                    copy.splice(i, 1);
+                    setBooks(copy);
+                  }}>
+                    삭제
+                  </button>
+
+                </div>
+                ))
+              }
+             {/* ************************ 도서목록 끝 ************************* */}
+            
+            <div>
+              <button onClick={bookUpdate}>제목수정</button>
+              <button onClick={bookSort}>제목정렬</button>
+            </div>
+
+            <div>
+              <input onChange={(e) => {
+                //console.log(e.target.value)
+                setUserinput(e.target.value)
+              }} />
+              <button onClick={(e) => {
+                let copy = [...books];
+                let copy_like = [...like];
+                let copy_dlike = [...dislike];
+                copy.unshift(userInput);
+                copy_like.unshift(0);
+                copy_dlike.unshift(0);
+                setBooks(copy);
+                setLike(copy_like);
+                setDislike(copy_dlike);
+              }}>
+                등록
+              </button>  
+            </div>
+
+            {/* ########## Modal ########## */}
+            {
+              modal === true ? <Modal index={index} title={books[index]} /> : null
+            }
+            {/********************************************************/}
+            
+            </div>
+          </>
+        );
+      }
+      ReactDOM.createRoot(root).render(<App />);
+    </script>
+
+
+  </body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js" ></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <script type="text/babel">
+    const rootElement = document.getElementById("root")
+    /* 
+        상태가 바뀌면 콤포넌트도 재렌더링이 일어남
+      */
+
+        /* 
+            상태값이 바뀔 때 마다 화면 콤포넌트가 매번 재 랜더링이 일어남
+            즉 App함수 안에 모든 것이 초기화가 일어난다.
+        */
+        const App = () => {
+            const [first, setFirst] = React.useState(2) 
+            const functionA = React.useCallback(() => {
+            console.log(first)
+            return 
+        },[first])
+
+        React.useEffect(()=>{
+            console.log("functionA주소번지가 변경됨");
+        },[functionA])
+            return (
+            <>
+                <input type="number" 
+                value={first} 
+                onChange={(e)=>setFirst(parseInt(e.target.value))} 
+                />
+                <button onClick={functionA}>functionA호출</button>
+            </>
+        )
+    }
+    ReactDOM.createRoot(rootElement).render(<App />)
+    </script>
+</body>
+</html>
